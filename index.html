@@ -588,7 +588,7 @@
 
                 <div class="hero-content">
 
-                    <div class="countdown-container gsap-fade-up">
+                    <div class="countdown-container">
                         <div class="countdown-header">
                             <sl-icon name="rocket-takeoff-fill"></sl-icon>
                             <h2 class="countdown-title">Launch Window Opens In</h2>
@@ -685,19 +685,6 @@
             delay: 0.2
         });
 
-        // Animate countdown on scroll
-        gsap.to('.countdown-container.gsap-fade-up', {
-            scrollTrigger: {
-                trigger: '.countdown-container',
-                start: 'top 80%',
-                toggleActions: 'play none none none'
-            },
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out'
-        });
-
         // Animate CTA section
         gsap.to('.cta-section.gsap-fade-up', {
             scrollTrigger: {
@@ -710,20 +697,6 @@
             duration: 0.8,
             ease: 'power2.out',
             delay: 0.2
-        });
-
-        // Animate countdown items individually
-        gsap.from('.countdown-item', {
-            scrollTrigger: {
-                trigger: '.countdown-grid',
-                start: 'top 75%',
-                toggleActions: 'play none none none'
-            },
-            scale: 0.8,
-            opacity: 0,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: 'back.out(1.7)'
         });
 
         // Lottie Animation (using a public rocket animation)
@@ -743,60 +716,70 @@
             delay: 0.5
         });
 
-        // Countdown timer
-        const countdownElements = {
-            days: document.querySelector('.days'),
-            hours: document.querySelector('.hr'),
-            minutes: document.querySelector('.min'),
-            seconds: document.querySelector('.sec')
-        };
+        // Countdown timer - initialize immediately
+        function initializeCountdown() {
+            const countdownElements = {
+                days: document.querySelector('.days'),
+                hours: document.querySelector('.hr'),
+                minutes: document.querySelector('.min'),
+                seconds: document.querySelector('.sec')
+            };
 
-        const launchTimestamp = (() => {
-            const now = new Date();
-            const sixMonthsAhead = new Date(now);
-            const originalDay = sixMonthsAhead.getDate();
+            // Debug: log if elements are found
+            console.log('Countdown elements:', countdownElements);
 
-            sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
+            const launchTimestamp = (() => {
+                const now = new Date();
+                const sixMonthsAhead = new Date(now);
+                const originalDay = sixMonthsAhead.getDate();
 
-            if (sixMonthsAhead.getDate() !== originalDay) {
-                sixMonthsAhead.setDate(0);
+                sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
+
+                if (sixMonthsAhead.getDate() !== originalDay) {
+                    sixMonthsAhead.setDate(0);
+                }
+
+                return sixMonthsAhead.getTime();
+            })();
+
+            console.log('Launch date:', new Date(launchTimestamp));
+
+            function updateCountdown() {
+                const now = Date.now();
+                const diff = launchTimestamp - now;
+
+                if (diff <= 0) {
+                    clearInterval(timerId);
+                    setCountdownValues(0, 0, 0, 0);
+                    return;
+                }
+
+                const second = 1000;
+                const minute = second * 60;
+                const hour = minute * 60;
+                const day = hour * 24;
+
+                const days = Math.floor(diff / day);
+                const hours = Math.floor((diff % day) / hour);
+                const minutes = Math.floor((diff % hour) / minute);
+                const seconds = Math.floor((diff % minute) / second);
+
+                setCountdownValues(days, hours, minutes, seconds);
             }
 
-            return sixMonthsAhead.getTime();
-        })();
-
-        const timerId = setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        function updateCountdown() {
-            const now = Date.now();
-            const diff = launchTimestamp - now;
-
-            if (diff <= 0) {
-                clearInterval(timerId);
-                setCountdownValues(0, 0, 0, 0);
-                return;
+            function setCountdownValues(days, hours, minutes, seconds) {
+                if (countdownElements.days) countdownElements.days.textContent = days;
+                if (countdownElements.hours) countdownElements.hours.textContent = hours;
+                if (countdownElements.minutes) countdownElements.minutes.textContent = minutes;
+                if (countdownElements.seconds) countdownElements.seconds.textContent = seconds;
             }
 
-            const second = 1000;
-            const minute = second * 60;
-            const hour = minute * 60;
-            const day = hour * 24;
-
-            const days = Math.floor(diff / day);
-            const hours = Math.floor((diff % day) / hour);
-            const minutes = Math.floor((diff % hour) / minute);
-            const seconds = Math.floor((diff % minute) / second);
-
-            setCountdownValues(days, hours, minutes, seconds);
+            const timerId = setInterval(updateCountdown, 1000);
+            updateCountdown(); // Run immediately
         }
 
-        function setCountdownValues(days, hours, minutes, seconds) {
-            countdownElements.days.textContent = days;
-            countdownElements.hours.textContent = hours;
-            countdownElements.minutes.textContent = minutes;
-            countdownElements.seconds.textContent = seconds;
-        }
+        // Initialize countdown
+        initializeCountdown();
 
         document.querySelector('.year').textContent = new Date().getFullYear();
     </script>
