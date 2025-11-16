@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="This website is under construction. Please check back later.">
-    <meta property="og:title" content="Website Under Construction">
+    <meta name="description" content="The next generation of intelligent automation from Aether Labs is almost here.">
+    <meta property="og:title" content="Aether Labs | Launching Soon">
     <meta property="og:description"
-        content="This website is under construction. Please check back later.">
+        content="The next generation of intelligent automation from Aether Labs is almost here.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://digitalmalayalistudio.github.io/unstruction/">
-    <meta property="og:image" content="https://digitalmalayalistudio.github.io/unstruction/assets/preview.webp">
-    <title>Website Under Construction</title>
+    <meta property="og:url" content="https://aetherlabs.dev/">
+    <meta property="og:image" content="assets/preview.png">
+    <title>Aether Labs | Launching Soon</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <script src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/dist/utilities/shoelace.js"
         data-shoelace="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0/dist/"></script>
@@ -26,8 +25,6 @@
     <script type="module"
         src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/cdn/components/icon/icon.js"></script>
     <script type="module"
-        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/cdn/components/button-group/button-group.js"></script>
-    <script type="module"
         src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/cdn/components/badge/badge.js"></script>
     <style>
         body {
@@ -36,121 +33,222 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
             font-family: var(--sl-font-sans);
             line-height: var(--sl-line-height-normal);
+            color: var(--sl-color-neutral-0);
+            background: radial-gradient(circle at 20% 20%, #ffb26b 0%, #ff7a3d 40%, #1a1328 100%);
+            background-attachment: fixed;
+            animation: backdrop-drift 12s ease-in-out infinite alternate;
         }
 
-        .card-overview {
-            max-width: 350px;
+        sl-card::part(base) {
+            max-width: 380px;
+            background-color: rgba(18, 14, 28, 0.82);
+            border: 1px solid rgba(255, 182, 102, 0.4);
+            box-shadow: 0 18px 38px rgba(11, 8, 20, 0.55);
+            backdrop-filter: blur(16px);
+            border-radius: 1.35rem;
+            animation: card-intro 650ms cubic-bezier(0.33, 1, 0.68, 1) both;
         }
 
-        .card-overview small {
-            color: var(--sl-color-neutral-700);
+        sl-card::part(header) {
+            padding-bottom: 0;
         }
 
-        .card-overview [slot='footer'] {
-            display: flex;
-            justify-content: space-between;
+        sl-card::part(body) {
+            display: grid;
+            gap: 0.75rem;
+            padding-top: 0.5rem;
+        }
+
+        .card-overview strong {
+            font-size: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .card-overview p {
+            margin: 0;
+            color: var(--sl-color-neutral-300);
+        }
+
+        .countdown-copy {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
             align-items: center;
         }
 
         sl-badge::part(base) {
-            background-color: var(--sl-color-orange-600);
-            --pulse-color: var(--sl-color-orange-600);
+            background-color: #ff7a3d;
+            --pulse-color: rgba(255, 154, 78, 0.65);
+            animation: badge-pulse 2.2s ease-in-out infinite;
         }
 
         sl-button::part(base) {
-            color: var(--sl-color-gray-50);
-            background-color: var(--sl-color-orange-600);
-            border-color: var(--sl-color-orange-300);
+            color: var(--sl-color-neutral-0);
+            background: linear-gradient(135deg, #ff8a47, #f7672a);
+            border: none;
+            box-shadow: 0 10px 24px rgba(247, 103, 42, 0.3);
+            transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
         }
 
         sl-button::part(base):hover {
-            background-color: var(--sl-color-orange-500);
+            transform: translateY(-1px);
+            box-shadow: 0 14px 26px rgba(247, 103, 42, 0.38);
+            filter: saturate(1.05);
+        }
+
+        sl-button::part(base):focus-visible {
+            outline: 2px solid rgba(255, 196, 125, 0.8);
+            outline-offset: 3px;
+        }
+
+        sl-icon-button::part(base) {
+            transition: transform 200ms ease, color 200ms ease;
         }
 
         sl-icon-button::part(base):hover {
-            color: var(--sl-color-orange-600);
+            color: #ff7a3d;
+            transform: translateY(-1px);
         }
 
         .copyright {
-            color: var(--sl-color-neutral-600);
+            color: rgba(255, 255, 255, 0.64);
             text-align: center;
-            margin-top: 2rem;
         }
 
-        .copyright a {
-            color: var(--sl-color-orange-600);
+        @keyframes card-intro {
+            from {
+                opacity: 0;
+                transform: translateY(22px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes badge-pulse {
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 154, 78, 0.35);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 12px rgba(255, 154, 78, 0);
+            }
+        }
+
+        @keyframes backdrop-drift {
+            from {
+                background-position: 0% 0%;
+            }
+
+            to {
+                background-position: 60% 60%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body,
+            sl-card::part(base),
+            sl-badge::part(base) {
+                animation: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
     <sl-card class="card-overview">
-        <img slot="image" src="assets/preview.webp" alt="Unstruction" width="350">
+        <img slot="image" src="assets/preview.png" alt="Aether Labs mark" width="350">
 
-        <strong>Unstruction</strong><br>
-        This website is under construction.<br>Please check back later in <sl-badge pill pulse
-            class="days"></sl-badge> days, <sl-badge pill pulse class="hr"></sl-badge> hours, <sl-badge
-            pill pulse class="min"></sl-badge> minutes and <sl-badge pill pulse
-            class="sec"></sl-badge> seconds. <br>
-        <small>Feel free to reach out to us.</small>
+        <strong>Aether Labs</strong>
+        <p>We are engineering an intelligent automation platform that empowers teams to ship faster with confidence.</p>
+        <p class="countdown-copy">Launch window opens in
+            <sl-badge pill pulse class="days"></sl-badge> days,
+            <sl-badge pill pulse class="hr"></sl-badge> hours,
+            <sl-badge pill pulse class="min"></sl-badge> minutes and
+            <sl-badge pill pulse class="sec"></sl-badge> seconds.
+        </p>
+        <small>Questions or collaboration ideas? Drop us a line.</small>
         <div slot="footer">
-            <sl-button-group label="Alignment">
-                <sl-button size="medium" circle href="tel:123456789">
-                    <sl-icon name="telephone" label="Phone"></sl-icon>
-                </sl-button>
-                <sl-button size="medium" circle href="mailto:mail@example.com">
-                    <sl-icon name="envelope" label="Mail"></sl-icon>
-                </sl-button>
-                <sl-button size="medium" circle href="https://wa.me/91123456789">
-                    <sl-icon name="whatsapp" label="WhatsApp"></sl-icon>
-                </sl-button>
-                <sl-button size="medium" circle href="https://maps.google.com" target="_blank">
-                    <sl-icon name="geo-alt" label="Map"></sl-icon>
-                </sl-button>
-            </sl-button-group>
+            <sl-button size="medium" pill href="mailto:contact@aetherlabs.dev">
+                <sl-icon slot="prefix" name="envelope" label="Email"></sl-icon>
+                contact@aetherlabs.dev
+            </sl-button>
         </div>
     </sl-card>
 
-    <small class="copyright"><sl-icon-button name="github" label="Settings" style="font-size: 1.2rem;"
-            href="https://github.com/digitalmalayalistudio/unstruction/"
-            target="_blank"></sl-icon-button><br>MIT-licensed template by
-        <a href="http://studio.digitalmalayali.in/">Digital Malayali Studio</a><br>
-        © 2024 Digital Malayali Studio</small>
+    <small class="copyright">
+        <sl-icon-button name="github" label="GitHub" style="font-size: 1.2rem;"
+            href="https://github.com/wari-sul"
+            target="_blank"></sl-icon-button><br>
+        © <span class="year"></span> Aether Labs. All rights reserved.
+    </small>
 
     <script>
-        const id = setInterval(timer, 1000);
+        const countdownElements = {
+            days: document.querySelector('.days'),
+            hours: document.querySelector('.hr'),
+            minutes: document.querySelector('.min'),
+            seconds: document.querySelector('.sec')
+        };
 
-        function timer() {
-            const target = new Date('Jan 1, 3000, 00:00:00').getTime();
-            const current = new Date().getTime();
-            const diff = target - current;
+        const launchTimestamp = (() => {
+            const now = new Date();
+            const sixMonthsAhead = new Date(now);
+            const originalDay = sixMonthsAhead.getDate();
 
-            const s = 1000;
-            const m = s * 60;
-            const h = m * 60;
-            const d = h * 24;
+            sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
 
-            let days = Math.floor(diff / d);
-            let hr = Math.floor((diff % d) / h);
-            let min = Math.floor((diff % h) / m);
-            let sec = Math.floor((diff % m) / s);
+            if (sixMonthsAhead.getDate() !== originalDay) {
+                sixMonthsAhead.setDate(0);
+            }
 
-            document.querySelector('.days').textContent = days;
-            document.querySelector('.hr').textContent = hr;
-            document.querySelector('.min').textContent = min;
-            document.querySelector('.sec').textContent = sec;
+            return sixMonthsAhead.getTime();
+        })();
+
+        const timerId = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function updateCountdown() {
+            const now = Date.now();
+            const diff = launchTimestamp - now;
 
             if (diff <= 0) {
-                clearInterval(id);
-                document.querySelector('.days').textContent = '0';
-                document.querySelector('.hr').textContent = '0';
-                document.querySelector('.min').textContent = '0';
-                document.querySelector('.sec').textContent = '0';
+                clearInterval(timerId);
+                setCountdownValues(0, 0, 0, 0);
+                return;
             }
+
+            const second = 1000;
+            const minute = second * 60;
+            const hour = minute * 60;
+            const day = hour * 24;
+
+            const days = Math.floor(diff / day);
+            const hours = Math.floor((diff % day) / hour);
+            const minutes = Math.floor((diff % hour) / minute);
+            const seconds = Math.floor((diff % minute) / second);
+
+            setCountdownValues(days, hours, minutes, seconds);
         }
 
-        timer();
+        function setCountdownValues(days, hours, minutes, seconds) {
+            countdownElements.days.textContent = days;
+            countdownElements.hours.textContent = hours;
+            countdownElements.minutes.textContent = minutes;
+            countdownElements.seconds.textContent = seconds;
+        }
+
+        document.querySelector('.year').textContent = new Date().getFullYear();
     </script>
 </body>
+
+</html>

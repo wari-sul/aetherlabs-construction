@@ -1,71 +1,48 @@
 <div align="center">
 
-<img src="assets/favicon.svg" alt="Unstruction" width="50"/>
+<img src="assets/favicon.svg" alt="Aether Labs" width="48" />
 
-# Unstruction
-An open-source web template built with [Shoelace](https://shoelace.style/) for setting up a simple and easy **website under construction** page.
-
-[![Static Badge](https://img.shields.io/badge/jekyll-theme-CC0000?logo=jekyll&logoColor=%23CC0000)](https://github.com/digitalmalayalistudio/unstruction-jekyll-theme/)
-[![Gem (including prereleases)](https://img.shields.io/gem/v/unstruction-jekyll-theme?logo=ruby&logoColor=%23E9573F)](https://rubygems.org/gems/unstruction-jekyll-theme)
-[![Gem](https://img.shields.io/gem/dt/unstruction-jekyll-theme?logo=ruby&logoColor=%23E9573F)](https://rubygems.org/gems/unstruction-jekyll-theme)
-
-[![WordPress Theme Version](https://img.shields.io/wordpress/theme/v/unstruction?logo=wordpress&labelColor=%2321759B)](https://wordpress.org/themes/unstruction/)
-[![WordPress Theme Downloads](https://img.shields.io/wordpress/theme/dt/unstruction?logo=wordpress&labelColor=%2321759B&color=green)](https://wordpress.org/themes/unstruction/)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/DigitalMalayaliStudio/unstruction-wordpress-theme/total?logo=github&labelColor=%23181717&color=%232f81f7)](https://github.com/DigitalMalayaliStudio/unstruction-wordpress-theme/releases)
-
-[Live Demo ◉](https://digitalmalayalistudio.github.io/unstruction/)
+# Aether Labs Launchpad
+An animated "coming soon" surface powered by [Shoelace](https://shoelace.style/) that keeps visitors informed while our platform ships.
 
 </div>
 
-## Features
-- 😊 No installation or fancy setup; just add the website name and contact details!
-- ⏱️ Displays a countdown timer until the website launch date! 
-- ⚡ Uses [Shoelace](https://shoelace.style/), a powerful web component library!
+## What’s Inside
+- ⚡ Shoelace web components for accessible buttons, badges, and icons via CDN.
+- 🌇 Radial orange gradient backdrop with glassmorphism styling and subtle motion.
+- ⏱️ Countdown logic that automatically targets six months from the current visit.
+- ✉️ Streamlined contact entry point wired to `contact@aetherlabs.dev`.
+- 🖼️ Local launch artwork at `assets/preview.png` plus the existing Shoelace-friendly favicon.
 
-## Usage
-The first step is to click the **Use this template** button above the file list to create a new repository.
+## Getting Started
+1. Clone or download this repository.
+2. Open `index.html` in any modern browser — Shoelace is loaded from CDN, so no build step is required.
+3. Tweak the content or styling described below to match your launch messaging.
 
-### Add website name and URL
-Go to [line 92](https://github.com/digitalmalayalistudio/unstruction/blob/main/index.html#L92) in `index.html` file and add website name:
+## Customise It
+### Branding
+- Update the hero image by replacing `assets/preview.png` with another 350 px (or wider) asset and keep the same filename for instant swaps.
+- Adjust the hero copy inside the `<sl-card>` body to reflect your brand voice.
+- `assets/favicon.svg` is the current tab icon; swap it with a new SVG if you receive another mark.
 
-```html
-<strong>Unstruction</strong>
-```
+### Countdown Window
+- The script computes a target date six months ahead every time the page loads and gracefully rolls to the last day of the month when needed (e.g. 31st → end of next month).
+- To pin the countdown to a specific release date, replace the `launchTimestamp` calculation with a static `new Date('YYYY-MM-DDTHH:mm:ssZ')` value.
 
-Make sure to change the [meta](https://github.com/digitalmalayalistudio/unstruction/blob/main/index.html#L13) URL as well:
+### Contact Button
+- The footer contains a single Shoelace button that opens the default mail client. Change the `href` attribute if you prefer a different address or swap in another CTA.
 
-```html
-<meta property="og:url" content="https://digitalmalayalistudio.github.io/unstruction/">
-```
+### Styling
+- Global gradients and animations live in the `<style>` block at the top of `index.html`.
+- Respect reduced motion users by keeping the `@media (prefers-reduced-motion: reduce)` override when adding new effects.
 
-### Change image
-Add an image with a minimum width of 350px to assets folder replacing [preview.webp](https://github.com/DigitalMalayaliStudio/unstruction/blob/main/assets/preview.webp).
+## Tech Stack
+- [Shoelace 2.18 CDN build](https://shoelace.style/) for UI primitives.
+- Plain HTML, CSS, and vanilla JavaScript — no build tooling required.
 
-### Add contact details
-Add the necessary contact details, such as phone number and email, in [lines 98–112](https://github.com/digitalmalayalistudio/unstruction/blob/main/index.html#L98-L112).
+## Assets
+- `assets/preview.png` – local hero image used in the card and Open Graph preview.
+- `assets/favicon.svg` – current favicon that remains unchanged from the original template.
 
-```html
-<div slot="footer">
-    <sl-button-group label="Alignment">
-        <sl-button size="medium" circle href="tel:123456789">
-            <sl-icon name="telephone" label="Phone"></sl-icon>
-        </sl-button>
-        <sl-button size="medium" circle href="mailto:mail@example.com">
-            <sl-icon name="envelope" label="Mail"></sl-icon>
-        </sl-button>
-        <sl-button size="medium" circle href="https://wa.me/91123456789">
-            <sl-icon name="whatsapp" label="WhatsApp"></sl-icon>
-        </sl-button>
-        <sl-button size="medium" circle href="https://maps.google.com" target="_blank">
-            <sl-icon name="geo-alt" label="Map"></sl-icon>
-        </sl-button>
-    </sl-button-group>
-</div>
-```
-
-### Add website launch date
-You can change the date in [line 126](https://github.com/digitalmalayalistudio/unstruction/blob/main/index.html#L126) of `index.html`. Make sure to use a ISO 8601 format or the format shown in the example:
-
-```js
-const target = new Date('Jan 1, 3000, 00:00:00').getTime();
-```
+## License
+MIT — see [LICENSE](LICENSE) for details.
