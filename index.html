@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="sl-theme-dark" lang="en">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -13,8 +13,15 @@
     <meta property="og:image" content="assets/preview.png">
     <title>Aether Labs | Launching Soon</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/dist/utilities/shoelace.js"
         data-shoelace="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0/dist/"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/light.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/dark.css">
     <script type="module"
         src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/cdn/components/card/card.js"></script>
@@ -26,173 +33,717 @@
         src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/cdn/components/icon/icon.js"></script>
     <script type="module"
         src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/cdn/components/badge/badge.js"></script>
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/cdn/components/switch/switch.js"></script>
     <style>
+        :root {
+            --gradient-start: #fef6f0;
+            --gradient-mid: #fff0e5;
+            --gradient-end: #ffe8d6;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 122, 61, 0.12);
+            --card-shadow: rgba(26, 19, 40, 0.06);
+            --text-primary: #1a1328;
+            --text-secondary: #6b6580;
+            --text-muted: #9b95aa;
+            --accent-primary: #ff7a3d;
+            --accent-hover: #ff8f56;
+            --accent-light: #fff1eb;
+            --surface-elevated: rgba(255, 255, 255, 0.7);
+            --divider: rgba(107, 101, 128, 0.12);
+        }
+
+        html.sl-theme-dark {
+            --gradient-start: #0a0612;
+            --gradient-mid: #150d24;
+            --gradient-end: #1f1533;
+            --card-bg: rgba(20, 15, 30, 0.88);
+            --card-border: rgba(255, 182, 102, 0.18);
+            --card-shadow: rgba(0, 0, 0, 0.45);
+            --text-primary: #f8f6fa;
+            --text-secondary: #cdc4dc;
+            --text-muted: #a499b8;
+            --accent-primary: #ff8f56;
+            --accent-hover: #ffb078;
+            --accent-light: #2d1f1a;
+            --surface-elevated: rgba(30, 22, 44, 0.75);
+            --divider: rgba(205, 196, 220, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             min-height: 100dvh;
+            display: grid;
+            place-items: center;
+            padding: 1.5rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: radial-gradient(ellipse at top left, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+            background-attachment: fixed;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 122, 61, 0.06) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -30px) scale(1.1); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .theme-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.625rem 1rem;
+            background: var(--surface-elevated);
+            border: 1px solid var(--card-border);
+            border-radius: 2rem;
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle-btn sl-icon {
+            font-size: 1.125rem;
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle-btn span {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .hero-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 2rem;
+            overflow: hidden;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 24px 64px var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-section:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 32px 80px var(--card-shadow);
+        }
+
+        .hero-image {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, var(--accent-light) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-section:hover .hero-image img {
+            transform: scale(1.08);
+        }
+
+        .brand-overlay {
+            position: absolute;
+            inset: 0;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            gap: 1.5rem;
             padding: 2rem;
-            font-family: var(--sl-font-sans);
-            line-height: var(--sl-line-height-normal);
-            color: var(--sl-color-neutral-0);
-            background: radial-gradient(circle at 20% 20%, #ffb26b 0%, #ff7a3d 40%, #1a1328 100%);
-            background-attachment: fixed;
-            animation: backdrop-drift 12s ease-in-out infinite alternate;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+            backdrop-filter: blur(8px);
+            z-index: 2;
         }
 
-        sl-card::part(base) {
-            max-width: 380px;
-            background-color: rgba(18, 14, 28, 0.82);
-            border: 1px solid rgba(255, 182, 102, 0.4);
-            box-shadow: 0 18px 38px rgba(11, 8, 20, 0.55);
-            backdrop-filter: blur(16px);
-            border-radius: 1.35rem;
-            animation: card-intro 650ms cubic-bezier(0.33, 1, 0.68, 1) both;
+        .brand-overlay .brand-name {
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
         }
 
-        sl-card::part(header) {
-            padding-bottom: 0;
+        .brand-overlay .brand-tagline {
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            max-width: 48ch;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            font-weight: 500;
         }
 
-        sl-card::part(body) {
-            display: grid;
-            gap: 0.75rem;
-            padding-top: 0.5rem;
+        .lottie-container {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.5rem;
+            opacity: 0;
         }
 
-        .card-overview strong {
-            font-size: 1.5rem;
-            letter-spacing: 0.02em;
+        @media (min-width: 768px) {
+            .lottie-container {
+                width: 160px;
+                height: 160px;
+            }
         }
 
-        .card-overview p {
-            margin: 0;
-            color: var(--sl-color-neutral-300);
+        .hero-content {
+            padding: 2.5rem;
         }
 
-        .countdown-copy {
-            display: inline-flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
+        .brand-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .brand-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .brand-tagline {
+            font-size: clamp(1rem, 2.5vw, 1.125rem);
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 42ch;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--divider);
+            margin: 2rem 0;
+        }
+
+        .brand-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+            backdrop-filter: blur(8px);
+            z-index: 2;
         }
 
-        sl-badge::part(base) {
-            background-color: #ff7a3d;
-            --pulse-color: rgba(255, 154, 78, 0.65);
-            animation: badge-pulse 2.2s ease-in-out infinite;
+        .brand-overlay .brand-name {
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
         }
 
-        sl-button::part(base) {
-            color: var(--sl-color-neutral-0);
-            background: linear-gradient(135deg, #ff8a47, #f7672a);
-            border: none;
-            box-shadow: 0 10px 24px rgba(247, 103, 42, 0.3);
-            transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+        .brand-overlay .brand-tagline {
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            max-width: 48ch;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            font-weight: 500;
         }
 
-        sl-button::part(base):hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 26px rgba(247, 103, 42, 0.38);
-            filter: saturate(1.05);
+        .lottie-container {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.5rem;
+            opacity: 0;
         }
 
-        sl-button::part(base):focus-visible {
-            outline: 2px solid rgba(255, 196, 125, 0.8);
-            outline-offset: 3px;
+        .brand-tagline {
+            font-size: clamp(1rem, 2.5vw, 1.125rem);
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 42ch;
         }
 
-        sl-icon-button::part(base) {
-            transition: transform 200ms ease, color 200ms ease;
+        .divider {
+            height: 1px;
+            background: var(--divider);
+            margin: 2rem 0;
         }
 
-        sl-icon-button::part(base):hover {
-            color: #ff7a3d;
-            transform: translateY(-1px);
+        .brand-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+            backdrop-filter: blur(8px);
+            z-index: 2;
         }
 
-        .copyright {
-            color: rgba(255, 255, 255, 0.64);
+        .brand-overlay .brand-name {
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .brand-overlay .brand-tagline {
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            max-width: 48ch;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            font-weight: 500;
+        }
+
+        .lottie-container {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+        }
+
+        .gsap-fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .gsap-scale {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .countdown-container {
+            background: linear-gradient(135deg, var(--accent-light) 0%, transparent 100%);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .countdown-header {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .countdown-header sl-icon {
+            font-size: 1.25rem;
+            color: var(--accent-primary);
+        }
+
+        .countdown-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 1rem;
+        }
+
+        .countdown-item {
+            background: var(--surface-elevated);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            padding: 1.25rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 16px rgba(255, 122, 61, 0.1);
+        }
+
+        .countdown-value {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 800;
+            color: var(--accent-primary);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .countdown-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .cta-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .cta-text {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
             text-align: center;
         }
 
-        @keyframes card-intro {
-            from {
-                opacity: 0;
-                transform: translateY(22px) scale(0.98);
+        .cta-buttons {
+            display: grid;
+            gap: 1rem;
+        }
+
+        sl-button::part(base) {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.875rem 2rem;
+            border-radius: 0.875rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        sl-button[variant="default"]::part(base) {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-hover) 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(255, 122, 61, 0.25);
+        }
+
+        sl-button[variant="default"]::part(base):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 122, 61, 0.35);
+        }
+
+        sl-button[variant="default"]::part(base):active {
+            transform: translateY(0);
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--divider);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.75rem;
+            height: 2.75rem;
+            background: var(--surface-elevated);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(255, 122, 61, 0.2);
+        }
+
+        .social-btn sl-icon {
+            font-size: 1.25rem;
+        }
+
+        .copyright {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 2rem 0;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
+            .hero-content {
+                padding: 3rem;
+            }
+
+            .countdown-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .cta-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .lottie-container {
+                width: 160px;
+                height: 160px;
             }
         }
 
-        @keyframes badge-pulse {
-            0%,
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 154, 78, 0.35);
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
             }
 
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 12px rgba(255, 154, 78, 0);
-            }
-        }
-
-        @keyframes backdrop-drift {
-            from {
-                background-position: 0% 0%;
-            }
-
-            to {
-                background-position: 60% 60%;
+            .hero-image {
+                aspect-ratio: 21 / 9;
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            body,
-            sl-card::part(base),
-            sl-badge::part(base) {
-                animation: none !important;
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 
 <body>
-    <sl-card class="card-overview">
-        <img slot="image" src="assets/preview.png" alt="Aether Labs mark" width="350">
+    <div class="container">
+        <header>
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+                <sl-icon name="moon-stars-fill" class="dark-icon"></sl-icon>
+                <sl-icon name="sun-fill" class="light-icon" style="display: none;"></sl-icon>
+                <span class="theme-text">Dark</span>
+            </button>
+        </header>
 
-        <strong>Aether Labs</strong>
-        <p>We are engineering an intelligent automation platform that empowers teams to ship faster with confidence.</p>
-        <p class="countdown-copy">Launch window opens in
-            <sl-badge pill pulse class="days"></sl-badge> days,
-            <sl-badge pill pulse class="hr"></sl-badge> hours,
-            <sl-badge pill pulse class="min"></sl-badge> minutes and
-            <sl-badge pill pulse class="sec"></sl-badge> seconds.
-        </p>
-        <small>Questions or collaboration ideas? Drop us a line.</small>
-        <div slot="footer">
-            <sl-button size="medium" pill href="mailto:contact@aetherlabs.dev">
-                <sl-icon slot="prefix" name="envelope" label="Email"></sl-icon>
-                contact@aetherlabs.dev
-            </sl-button>
-        </div>
-    </sl-card>
+        <main>
+            <section class="hero-section gsap-scale">
+                <div class="hero-image">
+                    <img src="assets/preview.png" alt="Aether Labs - Intelligent Automation Platform" loading="lazy">
+                    <div class="brand-overlay">
+                        <div class="lottie-container" id="lottie-animation"></div>
+                        <h1 class="brand-name">Aether Labs</h1>
+                        <p class="brand-tagline">
+                            We're engineering an intelligent automation platform that empowers teams to ship faster with confidence.
+                        </p>
+                    </div>
+                </div>
 
-    <small class="copyright">
-        <sl-icon-button name="github" label="GitHub" style="font-size: 1.2rem;"
-            href="https://github.com/wari-sul"
-            target="_blank"></sl-icon-button><br>
-        © <span class="year"></span> Aether Labs. All rights reserved.
-    </small>
+                <div class="hero-content">
+
+                    <div class="countdown-container gsap-fade-up">
+                        <div class="countdown-header">
+                            <sl-icon name="rocket-takeoff-fill"></sl-icon>
+                            <h2 class="countdown-title">Launch Window Opens In</h2>
+                        </div>
+                        <div class="countdown-grid">
+                            <div class="countdown-item">
+                                <div class="countdown-value days">0</div>
+                                <div class="countdown-label">Days</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value hr">0</div>
+                                <div class="countdown-label">Hours</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value min">0</div>
+                                <div class="countdown-label">Minutes</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value sec">0</div>
+                                <div class="countdown-label">Seconds</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cta-section gsap-fade-up">
+                        <p class="cta-text">Questions or collaboration ideas? Drop us a line.</p>
+                        <div class="cta-buttons">
+                            <sl-button variant="default" href="mailto:contact@aetherlabs.dev" size="large">
+                                <sl-icon slot="prefix" name="envelope-fill"></sl-icon>
+                                contact@aetherlabs.dev
+                            </sl-button>
+                        </div>
+                    </div>
+
+                    <div class="footer-section">
+                        <div class="social-links">
+                            <a href="https://github.com/wari-sul" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Visit our GitHub">
+                                <sl-icon name="github"></sl-icon>
+                            </a>
+                        </div>
+                        <p class="copyright">© <span class="year"></span> Aether Labs. All rights reserved.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script>
+        // Theme management
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeText = themeToggle.querySelector('.theme-text');
+        const darkIcon = themeToggle.querySelector('.dark-icon');
+        const lightIcon = themeToggle.querySelector('.light-icon');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem('theme');
+
+        function setTheme(isDark) {
+            if (isDark) {
+                html.classList.add('sl-theme-dark');
+                themeText.textContent = 'Light';
+                darkIcon.style.display = 'none';
+                lightIcon.style.display = 'block';
+            } else {
+                html.classList.remove('sl-theme-dark');
+                themeText.textContent = 'Dark';
+                darkIcon.style.display = 'block';
+                lightIcon.style.display = 'none';
+            }
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Initialize theme
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            setTheme(true);
+        } else {
+            setTheme(false);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = !html.classList.contains('sl-theme-dark');
+            setTheme(isDark);
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animate hero section on load
+        gsap.to('.gsap-scale', {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: 'power3.out',
+            delay: 0.2
+        });
+
+        // Animate countdown on scroll
+        gsap.to('.countdown-container.gsap-fade-up', {
+            scrollTrigger: {
+                trigger: '.countdown-container',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out'
+        });
+
+        // Animate CTA section
+        gsap.to('.cta-section.gsap-fade-up', {
+            scrollTrigger: {
+                trigger: '.cta-section',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            delay: 0.2
+        });
+
+        // Animate countdown items individually
+        gsap.from('.countdown-item', {
+            scrollTrigger: {
+                trigger: '.countdown-grid',
+                start: 'top 75%',
+                toggleActions: 'play none none none'
+            },
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: 'back.out(1.7)'
+        });
+
+        // Lottie Animation (using a public rocket animation)
+        const lottieAnimation = lottie.loadAnimation({
+            container: document.getElementById('lottie-animation'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'https://assets5.lottiefiles.com/packages/lf20_vnikrcia.json'
+        });
+
+        // Animate Lottie container
+        gsap.to('.lottie-container', {
+            opacity: 1,
+            duration: 1,
+            ease: 'power2.out',
+            delay: 0.5
+        });
+
+        // Countdown timer
         const countdownElements = {
             days: document.querySelector('.days'),
             hours: document.querySelector('.hr'),
