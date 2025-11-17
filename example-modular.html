@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modular Countdown Example</title>
+</head>
+<body>
+    <h1>Countdown Example (Modular)</h1>
+    
+    <div class="countdown">
+        <div class="countdown-title">Launch Window Opens In</div>
+        <div>
+            <span class="days">0</span> Days
+            <span class="hr">0</span> Hours
+            <span class="min">0</span> Minutes
+            <span class="sec">0</span> Seconds
+        </div>
+    </div>
+
+    <!-- Required: countdown.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"></script>
+    
+    <!-- Modular countdown client -->
+    <script src="countdown-client.js"></script>
+    
+    <script>
+        // Initialize countdown with custom options
+        const countdown = new ServerCountdown({
+            apiEndpoint: '/api/countdown',
+            refreshInterval: 60000, // Refresh every 60 seconds
+            onComplete: () => {
+                console.log('Countdown completed!');
+                document.querySelector('.countdown-title').textContent = 'Event Started!';
+            }
+        });
+        
+        // Start the countdown
+        countdown.start();
+        
+        // Optional: Access time remaining
+        setInterval(() => {
+            const remaining = countdown.getTimeRemaining();
+            if (remaining !== null) {
+                console.log('Time remaining (ms):', remaining);
+            }
+        }, 10000); // Log every 10 seconds
+    </script>
+</body>
+</html>
