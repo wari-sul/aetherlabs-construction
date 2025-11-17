@@ -729,6 +729,21 @@
             console.log('Countdown elements:', countdownElements);
 
             const launchTimestamp = (() => {
+                // Check if we have a stored launch date
+                const storedTimestamp = localStorage.getItem('launchTimestamp');
+                
+                if (storedTimestamp) {
+                    const timestamp = parseInt(storedTimestamp, 10);
+                    // Verify the stored timestamp is in the future
+                    if (timestamp > Date.now()) {
+                        console.log('Using stored launch date:', new Date(timestamp));
+                        return timestamp;
+                    }
+                    // If expired, remove it and create a new one
+                    localStorage.removeItem('launchTimestamp');
+                }
+
+                // Calculate new launch date (6 months from now)
                 const now = new Date();
                 const sixMonthsAhead = new Date(now);
                 const originalDay = sixMonthsAhead.getDate();
@@ -739,7 +754,11 @@
                     sixMonthsAhead.setDate(0);
                 }
 
-                return sixMonthsAhead.getTime();
+                const timestamp = sixMonthsAhead.getTime();
+                // Store the timestamp for persistence
+                localStorage.setItem('launchTimestamp', timestamp.toString());
+                console.log('Created new launch date:', new Date(timestamp));
+                return timestamp;
             })();
 
             console.log('Launch date:', new Date(launchTimestamp));
