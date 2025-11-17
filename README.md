@@ -11,11 +11,14 @@ A modern, animated "coming soon" landing page for Aether Labs, featuring an inte
 </div>
 
 ## What’s Inside
-- ⚡ Shoelace web components for accessible buttons, badges, and icons via CDN.
-- 🌇 Radial orange gradient backdrop with glassmorphism styling and subtle motion.
-- ⏱️ Countdown logic that automatically targets six months from the current visit.
-- ✉️ Streamlined contact entry point wired to `contact@aetherlabs.dev`.
-- 🖼️ Local launch artwork at `assets/preview.png` plus the existing Shoelace-friendly favicon.
+- ⚡ **Shoelace Components** – Accessible web components for buttons, icons, and badges
+- 🎨 **Dark/Light Theme Toggle** – Persistent theme switching with localStorage, respects system preferences
+- 🎬 **Smooth Animations** – GSAP-powered transitions with ScrollTrigger plugin
+- 🚀 **Lottie Animations** – Animated rocket graphic loaded from Lottie Files CDN
+- ⏱️ **Smart Countdown Timer** – Dynamically targets 6 months from first visit, persists in localStorage
+- 🎯 **Fully Responsive** – Mobile-first design with fluid typography and adaptive layouts
+- ♿ **Accessible** – ARIA labels, keyboard navigation, semantic HTML, reduced motion support
+- 🌐 **Zero Build Required** – All dependencies loaded via CDN, just open and run
 
 ## 🚀 Quick Start
 
