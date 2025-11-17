@@ -19,6 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.18.0/dist/utilities/shoelace.js"
         data-shoelace="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0/dist/"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/light.css">
@@ -716,8 +717,8 @@
             delay: 0.5
         });
 
-        // Countdown timer - initialize immediately
-        function initializeCountdown() {
+        // Countdown timer - server-authoritative
+        async function initializeCountdown() {
             const countdownElements = {
                 days: document.querySelector('.days'),
                 hours: document.querySelector('.hr'),
@@ -725,65 +726,62 @@
                 seconds: document.querySelector('.sec')
             };
 
-            // Debug: log if elements are found
-            console.log('Countdown elements:', countdownElements);
+            const countdownTitle = document.querySelector('.countdown-title');
+            let timeOffset = 0;
+            let targetTimestamp = null;
+            let timerId = null;
 
-            const launchTimestamp = (() => {
-                // Check if we have a stored launch date
-                const storedTimestamp = localStorage.getItem('launchTimestamp');
-                
-                if (storedTimestamp) {
-                    const timestamp = parseInt(storedTimestamp, 10);
-                    // Verify the stored timestamp is in the future
-                    if (timestamp > Date.now()) {
-                        console.log('Using stored launch date:', new Date(timestamp));
-                        return timestamp;
-                    }
-                    // If expired, remove it and create a new one
-                    localStorage.removeItem('launchTimestamp');
+            // Fetch server time and target from API
+            async function fetchCountdownData() {
+                try {
+                    const response = await fetch('/api/countdown', {
+                        cache: 'no-store'
+                    });
+                    const data = await response.json();
+                    
+                    // Calculate clock offset: server time - client time
+                    timeOffset = data.server - Date.now();
+                    targetTimestamp = data.end;
+                    
+                    console.log('Server target:', new Date(targetTimestamp).toISOString());
+                    console.log('Time offset (ms):', timeOffset);
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Failed to fetch countdown data:', error);
+                    return false;
                 }
-
-                // Calculate new launch date (6 months from now)
-                const now = new Date();
-                const sixMonthsAhead = new Date(now);
-                const originalDay = sixMonthsAhead.getDate();
-
-                sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
-
-                if (sixMonthsAhead.getDate() !== originalDay) {
-                    sixMonthsAhead.setDate(0);
-                }
-
-                const timestamp = sixMonthsAhead.getTime();
-                // Store the timestamp for persistence
-                localStorage.setItem('launchTimestamp', timestamp.toString());
-                console.log('Created new launch date:', new Date(timestamp));
-                return timestamp;
-            })();
-
-            console.log('Launch date:', new Date(launchTimestamp));
+            }
 
             function updateCountdown() {
-                const now = Date.now();
-                const diff = launchTimestamp - now;
+                if (!targetTimestamp) return;
 
-                if (diff <= 0) {
+                // Use corrected time
+                const correctedNow = Date.now() + timeOffset;
+                const remainingMs = targetTimestamp - correctedNow;
+
+                if (remainingMs <= 0) {
                     clearInterval(timerId);
                     setCountdownValues(0, 0, 0, 0);
+                    if (countdownTitle) {
+                        countdownTitle.textContent = 'Event Started!';
+                    }
                     return;
                 }
 
-                const second = 1000;
-                const minute = second * 60;
-                const hour = minute * 60;
-                const day = hour * 24;
+                // Use countdown.js library to calculate time units
+                const timespan = countdown(
+                    new Date(correctedNow),
+                    new Date(targetTimestamp),
+                    countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
+                );
 
-                const days = Math.floor(diff / day);
-                const hours = Math.floor((diff % day) / hour);
-                const minutes = Math.floor((diff % hour) / minute);
-                const seconds = Math.floor((diff % minute) / second);
-
-                setCountdownValues(days, hours, minutes, seconds);
+                setCountdownValues(
+                    timespan.days || 0,
+                    timespan.hours || 0,
+                    timespan.minutes || 0,
+                    timespan.seconds || 0
+                );
             }
 
             function setCountdownValues(days, hours, minutes, seconds) {
@@ -793,8 +791,23 @@
                 if (countdownElements.seconds) countdownElements.seconds.textContent = seconds;
             }
 
-            const timerId = setInterval(updateCountdown, 1000);
-            updateCountdown(); // Run immediately
+            // Initialize countdown
+            const success = await fetchCountdownData();
+            if (success) {
+                updateCountdown(); // Run immediately
+                timerId = setInterval(updateCountdown, 1000);
+
+                // Optional: Refresh server time every 60 seconds to maintain accuracy
+                setInterval(async () => {
+                    await fetchCountdownData();
+                }, 60000);
+            } else {
+                // Fallback display
+                setCountdownValues(0, 0, 0, 0);
+                if (countdownTitle) {
+                    countdownTitle.textContent = 'Loading...';
+                }
+            }
         }
 
         // Initialize countdown
