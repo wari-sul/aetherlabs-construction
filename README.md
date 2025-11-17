@@ -2,8 +2,11 @@
 
 <img src="assets/favicon.svg" alt="Aether Labs" width="48" />
 
-# Aether Labs Launchpad
-An animated "coming soon" surface powered by [Shoelace](https://shoelace.style/) that keeps visitors informed while our platform ships.
+# Aether Labs Construction
+
+A modern, animated "coming soon" landing page for Aether Labs, featuring an intelligent automation platform preview with countdown timer, theme switching, and smooth animations.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 </div>
 
